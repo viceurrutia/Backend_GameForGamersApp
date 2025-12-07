@@ -15,15 +15,17 @@ public class Game {
     private Long id;
 
     private String title;
-    private String price;          // igual que en Android ("$59.990")
+    private String price;
     private String drawableName;
     private String genre;
     private int durationHours;
     private String shortDesc;
-    private String originalPrice;  // puede ser null
-    private int discountPercent;   // 0 si no hay oferta
+    private String originalPrice;
+    private int discountPercent;
 
-    // 🔹 Nueva relación: muchos juegos pertenecen a una categoría
+    // 1. 🆕 AGREGAMOS EL CAMPO STOCK
+    private int stock;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -31,6 +33,7 @@ public class Game {
     public Game() {
     }
 
+    // 2. 🆕 ACTUALIZAMOS EL CONSTRUCTOR
     public Game(Long id,
                 String title,
                 String price,
@@ -39,7 +42,8 @@ public class Game {
                 int durationHours,
                 String shortDesc,
                 String originalPrice,
-                int discountPercent) {
+                int discountPercent,
+                int stock) { // <--- Agregado aquí
         this.id = id;
         this.title = title;
         this.price = price;
@@ -49,10 +53,10 @@ public class Game {
         this.shortDesc = shortDesc;
         this.originalPrice = originalPrice;
         this.discountPercent = discountPercent;
+        this.stock = stock; // <--- Asignado aquí
     }
 
-    // 👉 Getters y setters
-
+    // Getters y setters antiguos...
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -80,7 +84,10 @@ public class Game {
     public int getDiscountPercent() { return discountPercent; }
     public void setDiscountPercent(int discountPercent) { this.discountPercent = discountPercent; }
 
-    // 🔹 Getter / setter de Category (FK)
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
+
+    // 3. 🆕 GETTER Y SETTER PARA STOCK
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
 }

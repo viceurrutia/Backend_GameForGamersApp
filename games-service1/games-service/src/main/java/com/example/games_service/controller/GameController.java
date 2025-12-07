@@ -49,6 +49,10 @@ public class GameController {
                     existing.setShortDesc(game.getShortDesc());
                     existing.setOriginalPrice(game.getOriginalPrice());
                     existing.setDiscountPercent(game.getDiscountPercent());
+
+                    // 🆕 NUEVO: Actualizar el stock
+                    existing.setStock(game.getStock());
+
                     return ResponseEntity.ok(repo.save(existing));
                 })
                 .orElse(ResponseEntity.notFound().build());
