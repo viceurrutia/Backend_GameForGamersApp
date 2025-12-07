@@ -18,13 +18,19 @@ public class PurchaseController {
         this.repo = repo;
     }
 
-    // El Admin llama aquí para ver el historial
+    // 1. Admin ve TODO
     @GetMapping
     public List<Purchase> getAll() {
         return repo.findAll();
     }
 
-    // La App llama aquí cuando el usuario da "Confirmar Compra"
+    // 2. 🆕 NUEVO: Usuario ve SUS compras
+    @GetMapping("/my/{email}")
+    public List<Purchase> getByEmail(@PathVariable String email) {
+        return repo.findByCustomerEmail(email);
+    }
+
+    // 3. Guardar compra
     @PostMapping
     public Purchase create(@RequestBody Purchase p) {
         if (p.getDate() == null) {
