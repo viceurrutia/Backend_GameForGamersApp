@@ -24,7 +24,6 @@ public class PurchaseController {
     }
 
     // 2. 🆕 USUARIO: Ve SOLO sus compras
-    // La App llamará a: /api/purchases/my/correo@usuario.com
     @GetMapping("/my/{email}")
     public List<Purchase> getMyPurchases(@PathVariable String email) {
         return repo.findByCustomerEmail(email);
@@ -33,6 +32,10 @@ public class PurchaseController {
     // 3. Crear compra
     @PostMapping
     public Purchase create(@RequestBody Purchase p) {
+        // 🛑 CORRECCIÓN CLAVE:
+        // Forzamos el ID a null para que Hibernate sepa que es una inserción NUEVA
+        p.setId(null);
+
         if (p.getDate() == null) {
             p.setDate(LocalDate.now());
         }
