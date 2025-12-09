@@ -1,11 +1,9 @@
 package com.example.games_service.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+import com.fasterxml.jackson.annotation.JsonIgnore; // 🆕 Importar esto
+import jakarta.persistence.*;
+import java.util.ArrayList; // 🆕 Importar esto
+import java.util.List;      // 🆕 Importar esto
 
 @Entity
 public class Game {
@@ -22,18 +20,21 @@ public class Game {
     private String shortDesc;
     private String originalPrice;
     private int discountPercent;
-
-    // 1. 🆕 AGREGAMOS EL CAMPO STOCK
     private int stock;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
+    // 🆕 ESTO ES LO QUE SOLUCIONA EL ERROR AL ELIMINAR:
+    // "cascade = CascadeType.ALL" significa: Si borro el Juego, borra todas sus Reviews.
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore // Evita errores de "bucle infinito" al enviar los datos a Android
+    private List<Review> reviews = new ArrayList<>();
+
     public Game() {
     }
 
-    // 2. 🆕 ACTUALIZAMOS EL CONSTRUCTOR
     public Game(Long id,
                 String title,
                 String price,
@@ -43,7 +44,7 @@ public class Game {
                 String shortDesc,
                 String originalPrice,
                 int discountPercent,
-                int stock) { // <--- Agregado aquí
+                int stock) {
         this.id = id;
         this.title = title;
         this.price = price;
@@ -53,7 +54,7 @@ public class Game {
         this.shortDesc = shortDesc;
         this.originalPrice = originalPrice;
         this.discountPercent = discountPercent;
-        this.stock = stock; // <--- Asignado aquí
+        this.stock = stock;
     }
 
     // Getters y setters antiguos...
@@ -87,7 +88,10 @@ public class Game {
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
 
-    // 3. 🆕 GETTER Y SETTER PARA STOCK
     public int getStock() { return stock; }
     public void setStock(int stock) { this.stock = stock; }
+
+    // 🆕 Getters y Setters para las Reviews (Necesario para que JPA funcione bien)
+    public List<Review> getReviews() { return reviews; }
+    public void setReviews(List<Review> reviews) { this.reviews = reviews; }
 }
